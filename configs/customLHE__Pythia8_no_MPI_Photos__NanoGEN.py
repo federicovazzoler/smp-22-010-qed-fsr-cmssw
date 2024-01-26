@@ -1,29 +1,37 @@
+import sys
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
-# Var parser
-options = VarParsing.VarParsing()
-options.register ('input_file',
-                  '/pnfs/desy.de/cms/tier2/store/user/fvazzole/powheg/crab_ZToEE_NLOQCD_LOEW__1_1000/240125_144036/0000/events_1.lhe' 
-                  VarParsing.VarParsing.multiplicity.singleton,
-                  VarParsing.VarParsing.varType.string,
-                  "input LHE file name")
+##############
+# Var parser #
+##############
+options = VarParsing.VarParsing ('standard')
+options.register('inputFile',
+#                 '/pnfs/desy.de/cms/tier2/store/user/fvazzole/powheg/crab_ZToEE_NLOQCD_LOEW__1_1000/240125_144036/0000/events_1.lhe',
+                 'root://dcache-cms-xrootd.desy.de://pnfs/desy.de/cms/tier2/store/user/fvazzole/powheg/crab_ZToEE_NLOQCD_LOEW__1_1000/240125_144036/0000/events_1.lhe',
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.string,
+                 "input LHE file name")
 
-options.register ('output_file',
-                  'events_1.root' 
+options.register ('outputFile',
+                  'events_1.root', 
                   VarParsing.VarParsing.multiplicity.singleton,
                   VarParsing.VarParsing.varType.string,
                   "output ROOT file name")
 
-options.register ('seed',
-                  '1', # default value
-                  VarParsing.VarParsing.multiplicity.singleton,
-                  VarParsing.VarParsing.varType.string,
-                  "seed number")
+options.register('seed', 
+                 1,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.int, 
+                 "Seed value")
 
-options.parseArguments()
+if(hasattr(sys, "argv")):
+  options.parseArguments()
+#  print(options)
 
-# Main processor
+##################
+# Main processor #
+##################
 process = cms.Process('NANOGEN')
 
 # import of standard configurations
@@ -47,7 +55,7 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("LHESource",
-    fileNames = cms.untracked.vstring(options.input_file)
+    fileNames = cms.untracked.vstring(options.inputFile)
 )
 
 process.options = cms.untracked.PSet(
@@ -72,7 +80,7 @@ process.NANOAODSIMoutput = cms.OutputModule("NanoAODOutputModule",
         dataTier = cms.untracked.string('NANOAOD'),
         filterName = cms.untracked.string('')
     ),
-    fileName = cms.untracked.string('file:' + options.output_file),
+    fileName = cms.untracked.string('file:' + options.outputFile),
     outputCommands = process.NANOAODSIMEventContent.outputCommands
 )
 
