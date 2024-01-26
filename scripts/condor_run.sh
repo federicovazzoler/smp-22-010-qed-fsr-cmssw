@@ -85,12 +85,12 @@ stageout_output() {
   local input_file="${1}"
   local output_directory="${2}"
 
+  print_message "starting stageout" INFO
+
   if [ ! -f "${input_file}" ]; then
     print_message "'${input_file}' does not exist" ERROR
     exit 1
   fi
-
-  print_message "starting stageout" INFO
  
   gfal-copy -t 86400 -rpf "${input_file}" "${output_directory}/$(basename "${input_file}")"
 
@@ -135,6 +135,8 @@ job() {
 
   stageout_output "${temp_out}" "$(dirname "${output_file}")"
 
+  print_message "job finished" INFO
+ 
   exit 0
 }
 
