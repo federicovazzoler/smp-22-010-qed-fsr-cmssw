@@ -94,7 +94,9 @@ stageout_output() {
  
   gfal-copy -t 86400 -rpf "${input_file}" "${output_directory}/$(basename "${input_file}")"
 
-  if [ "$?" -eq 0 ]; then
+  wait
+
+  if gfal-ls "${output_directory}/$(basename "${input_file}")" &> /dev/null; then
     print_message "stageout completed to ${output_directory}/$(basename "${input_file}")" INFO
   else
     print_message "stageout failed" ERROR
