@@ -56,7 +56,6 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100000
 
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(1000000)
-#    input = cms.untracked.int32(100000)
 )
 
 # Input source
@@ -108,8 +107,9 @@ process.generator = cms.EDFilter("Pythia8HadronizerFilter",
             'SpaceShower:pTmaxMatch = 2', 
             'TimeShower:pTmaxMatch = 2', 
             'ParticleDecays:allowPhotonRadiation = on', 
-            'TimeShower:QEDshowerByL = off', 
-            'TimeShower:QEDshowerByOther = off', 
+            'TimeShower:QEDshowerByL = on', 
+            'TimeShower:QEDshowerByOther = off',
+            'TimeShower:alphaEMorder = 0',
             'BeamRemnants:hardKTOnlyLHE = on', 
             'BeamRemnants:primordialKThard = 2.225001', 
             'SpaceShower:dipoleRecoil = 1', 
@@ -179,16 +179,10 @@ for path in process.paths:
 # customisation of the process.
 
 # Automatic addition of the customisation function from PhysicsTools.NanoAOD.nanogen_cff
-from PhysicsTools.NanoAOD.nanogen_cff import customizeNanoGEN,pruneGenParticlesNano,setGenFullPrecision 
+from PhysicsTools.NanoAOD.nanogen_cff import customizeNanoGEN 
 
 #call to customisation function customizeNanoGEN imported from PhysicsTools.NanoAOD.nanogen_cff
 process = customizeNanoGEN(process)
-
-#call to customisation function pruneGenParticlesNano imported from PhysicsTools.NanoAOD.nanogen_cff
-process = pruneGenParticlesNano(process)
-
-#call to customisation function setGenFullPrecision imported from PhysicsTools.NanoAOD.nanogen_cff
-process = setGenFullPrecision(process)
 
 # End of customisation functions
 

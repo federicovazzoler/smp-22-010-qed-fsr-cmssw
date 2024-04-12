@@ -1,5 +1,4 @@
 import sys
-import os
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
@@ -49,19 +48,14 @@ process.load('GeneratorInterface.Core.genFilterSummary_cff')
 process.load('PhysicsTools.NanoAOD.nanogen_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-process.load("FWCore.MessageLogger.MessageLogger_cfi")
-
-# Suppress event processing information
-process.MessageLogger.cerr.FwkReport.reportEvery = 100000 
 
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(1000000)
-#    input = cms.untracked.int32(100000)
 )
 
 # Input source
 process.source = cms.Source("LHESource",
-    fileNames = cms.untracked.vstring("file:" + os.path.abspath(options.inputFile))
+    fileNames = cms.untracked.vstring(options.inputFile)
 )
 
 process.options = cms.untracked.PSet(
@@ -98,6 +92,42 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:mc', '')
 
 process.generator = cms.EDFilter("Pythia8HadronizerFilter",
+    ExternalDecays = cms.PSet(
+        Photospp = cms.untracked.PSet(
+            forceBremForDecay = cms.PSet(
+                Wm = cms.vint32(0, -24),
+                Wp = cms.vint32(0, 24),
+                Z = cms.vint32(0, 23),
+                parameterSets = cms.vstring(
+                    'Z', 
+                    'Wp', 
+                    'Wm'
+                )
+            ),
+            parameterSets = cms.vstring(
+                'setExponentiation', 
+                'setInfraredCutOff', 
+                'setMeCorrectionWtForW', 
+                'setMeCorrectionWtForZ', 
+                'setMomentumConservationThreshold', 
+                'setPairEmission', 
+                'setPhotonEmission', 
+                'setStopAtCriticalError', 
+                'suppressAll', 
+                'forceBremForDecay'
+            ),
+            setExponentiation = cms.bool(True),
+            setInfraredCutOff = cms.double(1e-07),
+            setMeCorrectionWtForW = cms.bool(True),
+            setMeCorrectionWtForZ = cms.bool(True),
+            setMomentumConservationThreshold = cms.double(0.1),
+            setPairEmission = cms.bool(False),
+            setPhotonEmission = cms.bool(True),
+            setStopAtCriticalError = cms.bool(False),
+            suppressAll = cms.bool(True)
+        ),
+        parameterSets = cms.vstring('Photospp')
+    ),
     PythiaParameters = cms.PSet(
         parameterSets = cms.vstring(
             'pythia8CommonSettings', 

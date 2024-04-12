@@ -1,5 +1,4 @@
 import sys
-import os
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
@@ -49,19 +48,14 @@ process.load('GeneratorInterface.Core.genFilterSummary_cff')
 process.load('PhysicsTools.NanoAOD.nanogen_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-process.load("FWCore.MessageLogger.MessageLogger_cfi")
-
-# Suppress event processing information
-process.MessageLogger.cerr.FwkReport.reportEvery = 100000 
 
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(1000000)
-#    input = cms.untracked.int32(100000)
 )
 
 # Input source
 process.source = cms.Source("LHESource",
-    fileNames = cms.untracked.vstring("file:" + os.path.abspath(options.inputFile))
+    fileNames = cms.untracked.vstring(options.inputFile)
 )
 
 process.options = cms.untracked.PSet(
