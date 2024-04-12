@@ -62,7 +62,7 @@ check_proxy_certificate_validity() {
   validity_check_status=$?
   
   if [ "${validity_check_status}" -ne 0 ]; then
-    print_message "certificate has expired or is not valid." ERROR
+    print_message "certificate has expired or is not valid. Please use 'voms-proxy-init --rfc --voms cms --valid 192:00 -out ~/.globus/x509up' to recreate it." ERROR
     exit 1
   fi
   
